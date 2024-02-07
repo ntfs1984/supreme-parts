@@ -4,7 +4,7 @@ global $old_mtime, $mtime, $window;
 
 function add_me_to_tray($my_name, $my_icon, $tooltip, $pixbuf=true) {
 	global $mtime;
-// Если директории в формате /run/user/CURRENT_USER/PID/systray не существует, то создаем ее
+// Если директории в формате /run/user/CURRENT_USER/systray/PID не существует, то создаем ее
 	if (!is_dir($_SERVER['XDG_RUNTIME_DIR']."/systray/".getmypid())) {
 		mkdir($_SERVER['XDG_RUNTIME_DIR']."/systray/".getmypid(),0700,true);
 	}
