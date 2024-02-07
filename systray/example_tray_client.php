@@ -38,7 +38,7 @@ function check_for_actions($window)
 			$window->present_with_time($time);
 			$window->show();
 		}
-		if (get_action()=="ContextMenu") { // Создаем простейшее контекстное меню
+		if (get_action()=="ContextMenu") { // Создаем простейшее контекстное меню. Реализовано в форме окна, поэтому не закрывается по потере фокуса
 			$display = new GdkDisplay();
 			global $x,$y;
 			$x = $display->get_mouse_positionX(); // Возле курсора мыши, само собой
@@ -61,7 +61,7 @@ function check_for_actions($window)
 			$context_menu->add($vbox);
 			$context_menu->show();
 			$vbox->show();
-			$context_menu->move($x+22,$y+22);
+			$context_menu->move($x+22,$y+22); // Не на иконке же рисовать меню - нарисуем чуть правее и ниже
 			$context_menu->activate_focus();
 		}
 	}
