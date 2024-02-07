@@ -29,7 +29,7 @@ In this folder, CLIENT should place few files:
 
 `.updated` - some empty file, modification date of what, will be used to update states.
 
-After creating these files, CLIENT should go in loop, and keep finger on modification date of /run/user/1000/systray/12345/.updated file.
+After creating these files, CLIENT should go in loop, and keep finger on modification date of `/run/user/1000/systray/12345/.updated` file.
 
 Once file modification time was changed - CLIENT should read file "action" and handle state according to command in this file.
 
