@@ -13,7 +13,7 @@ We are using /run directory which is part of tmpfs and already have folder attac
 
 CLIENT, which wants to be trayed - should create folder named with it's PID under /run/user/UID/systray folder.
 
-For example, let it be /run/user/1000/systray/12345
+For example, let it be `/run/user/1000/systray/12345`
 
 In this folder, CLIENT should place few files:
 
@@ -37,11 +37,11 @@ For now I'm using two commands, which overlaping 95% of user's system tray requr
 
 And it's command "ContextMenu" which drawing simple popup menu near pointer.
 
-So, to call context menu of app, there are enough to run echo "ContextMenu" > /run/user/1000/systray/12345/action;touch /run/user/1000/systray/12345/.updated
+So, to call context menu of app, there are enough to run `echo "ContextMenu" > /run/user/1000/systray/12345/action;touch /run/user/1000/systray/12345/.updated`
 
 If CLIENT wants to update system tray icon, text, or something else - it should change modification date of the same /run/user/1000/systray/12345/.updated, and HOST should detect and act.
 
-HOST, which wants to manage tray - should scan folder /run/user/1000/systray/ for PIDs.
+HOST, which wants to manage tray - should scan folder `/run/user/1000/systray/` for PIDs.
 
 Good idea will be check if current PID is exist in system, and ignore/remove application's icon from tray, if PID doesn't exist anymore.
 
@@ -53,13 +53,13 @@ Next, HOST application should step by step load existing directories (named as P
 
 Read title, tooltip, and icon. Draw icon at tray zone, add tooltip to it, and connect pointer signals for click on icon according to programming language or framework, with simple actions for each click.
 
-Main click(usually it's left mouse button) should call writing word "Activate" to /run/user/UID/systray/PID/action of icon what was clicked.
+Main click(usually it's left mouse button) should call writing word "Activate" to `/run/user/UID/systray/PID/action` of icon what was clicked.
 
-Secondary click(right mouse button) should call writing word "ContextMenu" to /run/user/UID/systray/PID/action of icon what was clicked.
+Secondary click(right mouse button) should call writing word "ContextMenu" to `/run/user/UID/systray/PID/action` of icon what was clicked.
 
-After process of click, modify time of /run/user/UID/systray/PID/.updated should be update.
+After process of click, modify time of `/run/user/UID/systray/PID/.updated` should be update.
 
-In loop, HOST application should scan /run/user/UID/systray/ for new PIDs and for modify date of .updated file of each PID.
+In loop, HOST application should scan `/run/user/UID/systray/` for new PIDs and for modify date of .updated file of each PID.
 
 If file was modified comparing to previous check - then act. Re-draw icon, re-load title and so on.
 
