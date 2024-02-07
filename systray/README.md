@@ -17,17 +17,17 @@ For example, let it be `/run/user/1000/systray/12345`
 
 In this folder, CLIENT should place few files:
 
-title - plain file with application title
+`title` - plain file with application title
 
-tooltip - plain file with tooltip which will be displayed during hover
+`tooltip` - plain file with tooltip which will be displayed during hover
 
-icon_name - plain file with name of icon from current theme.
+`icon_name` - plain file with name of icon from current theme.
 
-icon_pixbuf - raw icon in pixbuf format, which will be described below.
+`icon_pixbuf` - raw icon in pixbuf format, which will be described below.
 
-action - file which will be used for sending signals to application
+`action` - file which will be used for sending signals to application
 
-.updated - some empty file, modification date of what, will be used to update states.
+`.updated` - some empty file, modification date of what, will be used to update states.
 
 After creating these files, CLIENT should go in loop, and keep finger on modification date of /run/user/1000/systray/12345/.updated file.
 
