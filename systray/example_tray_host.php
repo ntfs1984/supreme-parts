@@ -1,5 +1,6 @@
+#!/system/php/bin/php
 <?php
-global $tray_box, $old_time, $mtime;
+global $tray_box, $old_mtime, $mtime;
 function rmrf($dir) {
    $files = array_diff(scandir($dir), array('.','..'));
     foreach ($files as $file) {
@@ -9,7 +10,7 @@ function rmrf($dir) {
   }
 function check_tray()
 {
-global $tray_box, $old_time, $mtime, $item_button;
+global $tray_box, $old_mtime, $mtime, $item_button;
 // Сперва получаем список всех директорий, и определяем какая из них отсутствует в /proc, чтобы прибить трей
 $scan = scandir($_SERVER['XDG_RUNTIME_DIR']."/systray/");
 	foreach ($scan as $process) {
@@ -23,7 +24,9 @@ $scan = scandir($_SERVER['XDG_RUNTIME_DIR']."/systray/");
 				if (is_file($_SERVER['XDG_RUNTIME_DIR']."/systray/".$process."/tooltip")) {$tooltip = file_get_contents($_SERVER['XDG_RUNTIME_DIR']."/systray/".$process."/tooltip");}
 				if (!isset($item_button[$process])) { // Если процесс новенький, то создаем под него кнопку
 					$item_button[$process] = new GtkButton();
-					$item_button[$process]->connect("button-press-event",function($button, $event) {process_click($button, $event);});
+					$item_button[$process]->connect("button-release-event",function($button, $event) {
+						process_click($button, $event);
+						});
 				} else { // Если процесс уже есть в трее, то удаляем внутренности кнопки, оставляя все остальное. GObject не умеет в удаление событий, а это уменьшит утечку памяти
 					foreach ($item_button[$process]->get_children() as &$value) {
 						$value->destroy();
@@ -55,8 +58,12 @@ function process_click($item, $event) {
 	$process = $item->get_name();
 	if ($event->button->button == 1) {file_put_contents($_SERVER['XDG_RUNTIME_DIR']."/systray/".$process."/action", "Activate");} // Нажали левую кнопку - записали Activate
 	if ($event->button->button == 3) {file_put_contents($_SERVER['XDG_RUNTIME_DIR']."/systray/".$process."/action", "ContextMenu");} // Нажали правую - записали ContextMenu
+	echo "Обновляем ".$_SERVER['XDG_RUNTIME_DIR']."/systray/".$process."/.updated \n";
+	clearstatcache(); // Пых кеширует date modify по умолчанию, надо чистить
 	touch($_SERVER['XDG_RUNTIME_DIR']."/systray/".$process."/.updated");
-	return false;
+	$mtime[$process] = filectime($_SERVER['XDG_RUNTIME_DIR']."/systray/".$process."/.updated");	
+	echo "Время обновления - ".$mtime[$process]." \n";
+	return true;
 }
 Gtk::init();
 function GtkWindowDestroy($widget=NULL, $event=NULL)
